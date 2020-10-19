@@ -34,14 +34,24 @@ function App() {
       });
   }, []);
 
-  // Handler for dropdown changes. Update the currency symbol for the changed
-  // dropdown.
+  /**
+   * Handler for dropdown changes. Update the currency symbol for the changed dropdown.
+   */
   const handleDropdown = (e, id) => {
     if (id === 'curr1') {
       setCurrency1(e.target.value);
     } else {
       setCurrency2(e.target.value);
     }
+  };
+
+  /**
+   * Click handler for the Swap button.
+   */
+  const swapCurrencies = () => {
+    const one = currency1;
+    setCurrency1(currency2);
+    setCurrency2(one);
   };
 
   return (
@@ -62,13 +72,16 @@ function App() {
                 label="Currency 1"
                 options={coins}
                 value={currency1}
+                disabledValue={currency2}
                 onChange={handleDropdown}
               />
             </div>
 
             {/* Swap button */}
             <div className="col">
-              <button className="btn-swap">{`< Swap >`}</button>
+              <button
+                className="btn-swap"
+                onClick={() => swapCurrencies()}>{`< Swap >`}</button>
             </div>
 
             {/* Currency 2 select */}
@@ -78,6 +91,7 @@ function App() {
                 label="Currency 2"
                 options={coins}
                 value={currency2}
+                disabledValue={currency1}
                 onChange={handleDropdown}
               />
             </div>

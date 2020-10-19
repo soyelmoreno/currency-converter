@@ -19,7 +19,7 @@ function Dropdown(props) {
           <option
             key={item.symbol}
             value={item.symbol}
-            disabled={item.isDisabled}>
+            disabled={item.symbol === props.disabledValue}>
             {item.name}
           </option>
         ))}
