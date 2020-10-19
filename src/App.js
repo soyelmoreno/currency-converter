@@ -9,6 +9,9 @@ function App() {
   const [currency2, setCurrency2] = useState('ETH');
   const [rate1, setRate1] = useState(1);
   const [rate2, setRate2] = useState(1);
+  const [amount1, setAmount1] = useState('');
+  const [amount2, setAmount2] = useState('');
+  const [changedField, setChangedField] = useState('amount1');
 
   /**
    * Call one time after component is mounted
@@ -39,12 +42,44 @@ function App() {
   }, []);
 
   /**
-   * Call this to do the initial calculation and a fresh calculation on every render.
+   * Call this to do the initial calculation and a fresh calculation on every
+   * render.
    */
   useEffect(calculate);
 
   /**
-   * Handler for dropdown changes. Update the currency symbol for the changed dropdown.
+   * Calculate and display the exchange rate between the selected currencies.
+   */
+  function calculate() {
+    if (coins.length > 0) {
+      const curr1 = coins.find((coin) => coin.symbol === currency1);
+      const curr2 = coins.find((coin) => coin.symbol === currency2);
+      const exchange1 = curr2.price / curr1.price;
+      const exchange2 = curr1.price / curr2.price;
+      setRate1(roundIt(exchange1));
+      setRate2(roundIt(exchange2));
+      if (changedField === 'amount1') {
+        const raw1 = amount1 * rate1;
+        setAmount2(roundIt(raw1));
+      } else {
+        const raw2 = amount2 * rate2;
+        setAmount1(roundIt(raw2));
+      }
+    }
+  }
+
+  /**
+   * Round a value for displaying. If less than 2, use 4 decimal places, else,
+   * just two decimal places.
+   */
+  function roundIt(value) {
+    const places = value < 10 ? 10000 : 1000;
+    return Math.round((value + Number.EPSILON) * places) / places;
+  }
+
+  /**
+   * Handler for dropdown changes. Update the currency symbol for the changed
+   * dropdown.
    */
   const handleDropdown = (e, id) => {
     if (id === 'curr1') {
@@ -55,6 +90,18 @@ function App() {
   };
 
   /**
+   * Handle user typing in Amount fields
+   */
+  function handleAmountChange(e) {
+    if (e.target.id === 'amount1') {
+      setAmount1(e.target.value);
+    } else {
+      setAmount2(e.target.value);
+    }
+    setChangedField(e.target.id);
+  }
+
+  /**
    * Click handler for the Swap button.
    */
   const swapCurrencies = () => {
@@ -62,22 +109,6 @@ function App() {
     setCurrency1(currency2);
     setCurrency2(one);
   };
-
-  /**
-   * Calculate and display the exchange rate between the selected currencies.
-   */
-  function calculate() {
-    if (coins.length > 0) {
-      const curr1 = coins.find((coin) => coin.symbol === currency1);
-      const curr2 = coins.find((coin) => coin.symbol === currency2);
-      //console.log(currency1, curr1.price, currency2, curr2.price);
-      const places = 10000; // Set number of decimal places here
-      const exchange1 = curr2.price / curr1.price;
-      const exchange2 = curr1.price / curr2.price;
-      setRate1(Math.round(exchange1 * places) / places);
-      setRate2(Math.round(exchange2 * places) / places);
-    }
-  }
 
   return (
     <div className="App">
@@ -106,7 +137,7 @@ function App() {
             <div className="col">
               <button
                 className="btn-swap"
-                onClick={() => swapCurrencies()}>{`< Swap >`}</button>
+                onClick={() => swapCurrencies()}>{`Swap`}</button>
             </div>
 
             {/* Currency 2 select */}
@@ -150,10 +181,11 @@ function App() {
                 <div className="input-wrap">
                   <input
                     type="text"
-                    id="amt1"
-                    name="amt1"
+                    id="amount1"
                     className="input-amt"
                     placeholder="Enter an amount"
+                    value={amount1}
+                    onChange={handleAmountChange}
                   />
                   <span>{currency1}</span>
                 </div>
@@ -167,10 +199,11 @@ function App() {
                 <div className="input-wrap">
                   <input
                     type="text"
-                    id="amt2"
-                    name="amt2"
+                    id="amount2"
                     className="input-amt"
                     placeholder="Enter an amount"
+                    value={amount2}
+                    onChange={handleAmountChange}
                   />
                   <span>{currency2}</span>
                 </div>
@@ -179,9 +212,9 @@ function App() {
             {/* Display calculated equation */}
             <div className="display">
               <Equation
-                amt1={1}
+                amt1={amount1 ? amount1 : ''}
                 curr1={currency1}
-                amt2={1}
+                amt2={amount2 ? amount2 : ''}
                 curr2={currency2}
                 isCalc={true}
               />
