@@ -1,0 +1,13 @@
+.input-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-amt {
+  height: 2.125rem; /* 26px */
+  font-size: 1.125rem; /* 18px */
+  padding: 0.25rem 0.5rem; /* 4px 8px*/
+  margin-right: 0.5rem; /* 8px */
+  width: 100%;
+}

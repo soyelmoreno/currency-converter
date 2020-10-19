@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Equation from './Equation';
-import './App.css';
 import Dropdown from './Dropdown';
+import InputField from './InputField';
+import './App.css';
 
 function App() {
   const [coins, setCoins] = useState([]);
@@ -12,6 +13,7 @@ function App() {
   const [amount1, setAmount1] = useState('');
   const [amount2, setAmount2] = useState('');
   const [changedField, setChangedField] = useState('amount1');
+  const [loading, setLoading] = useState(true);
 
   /**
    * Call one time after component is mounted
@@ -38,12 +40,13 @@ function App() {
             };
           });
         setCoins(tickerTop10);
+        setLoading(false);
       });
   }, []);
 
   /**
-   * Call this to do the initial calculation and a fresh calculation on every
-   * render.
+   * Call this to do the initial calculation and also a fresh calculation on
+   * every render.
    */
   useEffect(calculate);
 
@@ -67,7 +70,7 @@ function App() {
   }
 
   /**
-   * Round a value for displaying. Start with 3 places. If less than 100, do 5
+   * Round a value for displaying. Start with 3 places. If less than 100, do 4
    * places, and if really small do more places.
    */
   function roundIt(value) {
@@ -101,17 +104,18 @@ function App() {
     } else {
       setAmount2(Number(e.target.value));
     }
+    // Set the changedField so calculate() knows who to update
     setChangedField(e.target.id);
   }
 
   /**
-   * Click handler for the Swap button.
+   * Handle click on Swap button. Swaps the selected currencies, and also the
+   * values of the Amount fields
    */
   const swapCurrencies = () => {
     const one = currency1;
     setCurrency1(currency2);
     setCurrency2(one);
-    // Also swap values of Amount fields
     const fieldone = amount1;
     setAmount1(amount2);
     setAmount2(fieldone);
@@ -127,40 +131,34 @@ function App() {
         <section className="App-section">
           <h2 className="visually-hidden">Choose currencies</h2>
 
-          <div className="cols controls">
-            {/* Currency 1 select */}
-            <div className="col">
-              <Dropdown
-                id="curr1"
-                label="Currency 1"
-                options={coins}
-                value={currency1}
-                disabledValue={currency2}
-                onChange={handleDropdown}
-              />
-            </div>
-
-            {/* Swap button */}
-            <div className="col">
-              <button
-                className="btn-swap"
-                onClick={() => swapCurrencies()}>{`Swap`}</button>
-            </div>
-
-            {/* Currency 2 select */}
-            <div className="col">
-              <Dropdown
-                id="curr2"
-                label="Currency 2"
-                options={coins}
-                value={currency2}
-                disabledValue={currency1}
-                onChange={handleDropdown}
-              />
-            </div>
+          <div className="col">
+            <Dropdown
+              id="curr1"
+              label="Currency 1"
+              options={coins}
+              value={currency1}
+              disabledValue={currency2}
+              onChange={handleDropdown}
+            />
           </div>
 
-          {/* Display equations */}
+          <div className="col">
+            <button className="btn-swap" onClick={() => swapCurrencies()}>
+              Swap
+            </button>
+          </div>
+
+          <div className="col">
+            <Dropdown
+              id="curr2"
+              label="Currency 2"
+              options={coins}
+              value={currency2}
+              disabledValue={currency1}
+              onChange={handleDropdown}
+            />
+          </div>
+
           <div className="display">
             <Equation
               amt1={1}
@@ -180,54 +178,45 @@ function App() {
         <section className="App-section">
           <h2 className="visually-hidden">Enter amounts</h2>
 
-          <div className="cols controls">
-            {/* Amount 1 */}
-            <div className="col">
-              <div className="control">
-                <label htmlFor="amount1">Amount of currency 1</label>
-                <div className="input-wrap">
-                  <input
-                    type="text"
-                    id="amount1"
-                    className="input-amt"
-                    placeholder="Enter an amount"
-                    value={amount1}
-                    onChange={handleAmountChange}
-                  />
-                  <span>{currency1}</span>
-                </div>
-              </div>
-            </div>
+          <div className="col">
+            <InputField
+              id="amount1"
+              label="Amount of currency 1"
+              amount={amount1}
+              currency={currency1}
+              onChange={handleAmountChange}
+            />
+          </div>
 
-            {/* Amount 2 */}
-            <div className="col">
-              <div className="control">
-                <label htmlFor="amount2">Amount of currency 2</label>
-                <div className="input-wrap">
-                  <input
-                    type="text"
-                    id="amount2"
-                    className="input-amt"
-                    placeholder="Enter an amount"
-                    value={amount2}
-                    onChange={handleAmountChange}
-                  />
-                  <span>{currency2}</span>
-                </div>
-              </div>
-            </div>
-            {/* Display calculated equation */}
-            <div className="display">
-              <Equation
-                amt1={amount1 ? roundIt(amount1) : ''}
-                curr1={currency1}
-                amt2={amount2 ? roundIt(amount2) : ''}
-                curr2={currency2}
-                isCalc={true}
-              />
-            </div>
+          <div className="col">
+            <InputField
+              id="amount2"
+              label="Amount of currency 2"
+              amount={amount2}
+              currency={currency2}
+              onChange={handleAmountChange}
+            />
+          </div>
+
+          <div className="display">
+            <Equation
+              amt1={amount1 ? roundIt(amount1) : ''}
+              curr1={currency1}
+              amt2={amount2 ? roundIt(amount2) : ''}
+              curr2={currency2}
+              isCalc={true}
+            />
           </div>
         </section>
+
+        {loading ? (
+          <div className="loading">
+            <div className="curtain"></div>
+            <div className="loading-text">Loading...</div>
+          </div>
+        ) : (
+          ''
+        )}
       </main>
     </div>
   );

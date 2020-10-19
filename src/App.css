@@ -6,12 +6,6 @@
   align-items: center;
 }
 
-/* Delete? */
-.App-logo {
-  height: 40vmin;
-  border: 5px solid green;
-}
-
 .App-header {
   min-height: 5vh;
   display: flex;
@@ -27,34 +21,23 @@
   align-items: center;
   background-color: var(--bg2);
   border: 3px solid var(--accent);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   max-width: 40rem; /* 640px */
   width: calc(100vw - 4rem);
   padding: 1rem;
+  position: relative;
 }
 
 .App-section {
   width: 100%;
   color: var(--light);
-  /* background-color: green; */
-}
-
-.App-link {
-  color: #09d3ac;
 }
 
 .col {
   padding-top: 0.5rem;
 }
 
-.control {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
 .display {
-  /* border: 3px solid orange; */
   margin: 1rem;
 }
 
@@ -62,7 +45,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* border: 1px solid white; */
   max-width: 28rem; /* 448px */
   margin: 0 auto;
 }
@@ -75,16 +57,30 @@
   margin-top: 1rem;
 }
 
-.input-wrap {
+.loading {
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.input-amt {
-  height: 2.125rem; /* 26px */
-  font-size: 1.125rem; /* 18px */
-  padding: 0.25rem 0.5rem; /* 4px 8px*/
-  margin-right: 0.5rem; /* 8px */
-  width: 100%;
+.curtain {
+  position: absolute;
+  background-color: var(--bg2);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.8;
+  border-radius: 0.25rem;
+}
+
+.loading-text {
+  font-size: 2rem;
+  color: var(--text);
+  z-index: 1;
 }
