@@ -7,8 +7,12 @@ function App() {
   const [coins, setCoins] = useState([]);
   const [currency1, setCurrency1] = useState('BTC');
   const [currency2, setCurrency2] = useState('ETH');
+  const [rate1, setRate1] = useState(1);
+  const [rate2, setRate2] = useState(1);
 
-  // Call one time after component is mounted
+  /**
+   * Call one time after component is mounted
+   */
   useEffect(() => {
     // Hit the API. Filter to take only the top 10, then get fields
     fetch('https://api.coinpaprika.com/v1/tickers')
@@ -35,6 +39,11 @@ function App() {
   }, []);
 
   /**
+   * Call this to do the initial calculation and a fresh calculation on every render.
+   */
+  useEffect(calculate);
+
+  /**
    * Handler for dropdown changes. Update the currency symbol for the changed dropdown.
    */
   const handleDropdown = (e, id) => {
@@ -53,6 +62,22 @@ function App() {
     setCurrency1(currency2);
     setCurrency2(one);
   };
+
+  /**
+   * Calculate and display the exchange rate between the selected currencies.
+   */
+  function calculate() {
+    if (coins.length > 0) {
+      const curr1 = coins.find((coin) => coin.symbol === currency1);
+      const curr2 = coins.find((coin) => coin.symbol === currency2);
+      //console.log(currency1, curr1.price, currency2, curr2.price);
+      const places = 10000; // Set number of decimal places here
+      const exchange1 = curr2.price / curr1.price;
+      const exchange2 = curr1.price / curr2.price;
+      setRate1(Math.round(exchange1 * places) / places);
+      setRate2(Math.round(exchange2 * places) / places);
+    }
+  }
 
   return (
     <div className="App">
@@ -99,8 +124,18 @@ function App() {
 
           {/* Display equations */}
           <div className="display">
-            <Equation amt1={1} curr1={`USD`} amt2={1.25} curr2={`EUR`} />
-            <Equation amt1={0.75} curr1={`USD`} amt2={1} curr2={`EUR`} />
+            <Equation
+              amt1={1}
+              curr1={currency1}
+              amt2={rate1}
+              curr2={currency2}
+            />
+            <Equation
+              amt1={rate2}
+              curr1={currency1}
+              amt2={1}
+              curr2={currency2}
+            />
           </div>
         </section>
 
@@ -120,7 +155,7 @@ function App() {
                     className="input-amt"
                     placeholder="Enter an amount"
                   />
-                  <span>{`USD`}</span>
+                  <span>{currency1}</span>
                 </div>
               </div>
             </div>
@@ -137,17 +172,17 @@ function App() {
                     className="input-amt"
                     placeholder="Enter an amount"
                   />
-                  <span>{`EUR`}</span>
+                  <span>{currency2}</span>
                 </div>
               </div>
             </div>
             {/* Display calculated equation */}
             <div className="display">
               <Equation
-                amt1={5}
-                curr1={`USD`}
-                amt2={11.25}
-                curr2={`EUR`}
+                amt1={1}
+                curr1={currency1}
+                amt2={1}
+                curr2={currency2}
                 isCalc={true}
               />
             </div>
