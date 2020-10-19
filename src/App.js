@@ -6,8 +6,14 @@ import './App.css';
 
 function App() {
   const [coins, setCoins] = useState([]);
-  const [currency1, setCurrency1] = useState('BTC');
-  const [currency2, setCurrency2] = useState('ETH');
+  const [currency1, setCurrency1] = useState({
+    symbol: 'BTC',
+    name: 'Bitcoin'
+  });
+  const [currency2, setCurrency2] = useState({
+    symbol: 'ETH',
+    name: 'Ethereum'
+  });
   const [rate1, setRate1] = useState(1);
   const [rate2, setRate2] = useState(1);
   const [amount1, setAmount1] = useState('');
@@ -55,8 +61,8 @@ function App() {
    */
   function calculate() {
     if (coins.length > 0) {
-      const curr1 = coins.find((coin) => coin.symbol === currency1);
-      const curr2 = coins.find((coin) => coin.symbol === currency2);
+      const curr1 = coins.find((coin) => coin.symbol === currency1.symbol);
+      const curr2 = coins.find((coin) => coin.symbol === currency2.symbol);
       const exchange1 = curr2.price / curr1.price;
       const exchange2 = curr1.price / curr2.price;
       setRate1(exchange1);
@@ -89,9 +95,11 @@ function App() {
    */
   const handleDropdown = (e, id) => {
     if (id === 'curr1') {
-      setCurrency1(e.target.value);
+      const newCurr1 = coins.find((coin) => coin.symbol === e.target.value);
+      setCurrency1(newCurr1);
     } else {
-      setCurrency2(e.target.value);
+      const newCurr2 = coins.find((coin) => coin.symbol === e.target.value);
+      setCurrency2(newCurr2);
     }
   };
 
@@ -136,8 +144,8 @@ function App() {
               id="curr1"
               label="Currency 1"
               options={coins}
-              value={currency1}
-              disabledValue={currency2}
+              value={currency1.symbol}
+              disabledValue={currency2.symbol}
               onChange={handleDropdown}
             />
           </div>
@@ -153,8 +161,8 @@ function App() {
               id="curr2"
               label="Currency 2"
               options={coins}
-              value={currency2}
-              disabledValue={currency1}
+              value={currency2.symbol}
+              disabledValue={currency1.symbol}
               onChange={handleDropdown}
             />
           </div>
@@ -162,15 +170,15 @@ function App() {
           <div className="display">
             <Equation
               amt1={1}
-              curr1={currency1}
+              curr1={currency1.name}
               amt2={roundIt(rate1)}
-              curr2={currency2}
+              curr2={currency2.name}
             />
             <Equation
               amt1={roundIt(rate2)}
-              curr1={currency1}
+              curr1={currency1.name}
               amt2={1}
-              curr2={currency2}
+              curr2={currency2.name}
             />
           </div>
         </section>
@@ -183,7 +191,7 @@ function App() {
               id="amount1"
               label="Amount of currency 1"
               amount={amount1}
-              currency={currency1}
+              currency={currency1.symbol}
               onChange={handleAmountChange}
             />
           </div>
@@ -193,7 +201,7 @@ function App() {
               id="amount2"
               label="Amount of currency 2"
               amount={amount2}
-              currency={currency2}
+              currency={currency2.symbol}
               onChange={handleAmountChange}
             />
           </div>
@@ -201,9 +209,9 @@ function App() {
           <div className="display">
             <Equation
               amt1={amount1 ? roundIt(amount1) : ''}
-              curr1={currency1}
+              curr1={amount1 ? currency1.name : '---'}
               amt2={amount2 ? roundIt(amount2) : ''}
-              curr2={currency2}
+              curr2={amount2 ? currency2.name : '---'}
               isCalc={true}
             />
           </div>

@@ -3,7 +3,6 @@ import './select-css.css';
 
 /**
  * Display a dropdown with a currency.
- * @param {*} props
  */
 function Dropdown(props) {
   return (

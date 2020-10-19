@@ -3,7 +3,6 @@ import './Equation.css';
 
 /**
  * Displays an equation with the two currencies.
- * @param {*} props
  */
 function Equation(props) {
   const classes = 'equation' + (props.isCalc ? ` calculated` : '');
