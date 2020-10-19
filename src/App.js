@@ -20,14 +20,16 @@ function App() {
   const [amount2, setAmount2] = useState('');
   const [changedField, setChangedField] = useState('amount1');
   const [loading, setLoading] = useState(true);
+  const [networkError, setNetworkError] = useState(false);
 
   /**
    * Call one time after component is mounted
    */
   useEffect(() => {
-    // Hit the API. Filter to take only the top 10, then get fields
+    // Hit the API. First check for errors. If none, then filter the data to
+    // take only the top 10, then get fields
     fetch('https://api.coinpaprika.com/v1/tickers')
-      .then((response) => response.json())
+      .then(checkForErrors)
       .then((data) => {
         const tickerTop10 = data
           .filter((obj) => {
@@ -47,6 +49,11 @@ function App() {
           });
         setCoins(tickerTop10);
         setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setNetworkError(true);
+        setLoading(false);
       });
   }, []);
 
@@ -55,6 +62,18 @@ function App() {
    * every render.
    */
   useEffect(calculate);
+
+  /**
+   * A function to check for errors from API calls. If status is in range
+   * 200-299 then response.ok is true, else false.
+   */
+  function checkForErrors(response) {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw Error(response.statusText);
+    }
+  }
 
   /**
    * Calculate and display the exchange rate between the selected currencies.
@@ -222,6 +241,13 @@ function App() {
             <div className="curtain"></div>
             <div className="loading-text">Loading...</div>
           </div>
+        ) : (
+          ''
+        )}
+        {networkError ? (
+          <p className="error">
+            Network error while attempting to connect to API.
+          </p>
         ) : (
           ''
         )}

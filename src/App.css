@@ -84,3 +84,7 @@
   color: var(--text);
   z-index: 1;
 }
+
+.error {
+  color: red;
+}
