@@ -1,8 +1,0 @@
-.equation {
-  margin: 0;
-  font-size: calc(0.75rem + 1vmin); /* 15px squished, 21px big */
-}
-
-.equation.calculated {
-  font-size: calc(1rem + 2vmin); /* 21px squished, 36px big */
-}
