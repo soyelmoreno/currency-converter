@@ -1,9 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Equation from './Equation';
 import './App.css';
-import './select-css.css';
+import Dropdown from './Dropdown';
 
 function App() {
+  const [coins, setCoins] = useState({});
+
+  // Call one time after component is mounted
+  useEffect(() => {
+    // Hit the API. Filter to take only the top 10, then get fields
+    fetch('https://api.coinpaprika.com/v1/tickers')
+      .then((response) => response.json())
+      .then((data) => {
+        const tickerTop10 = data
+          .filter((obj) => {
+            if (obj.rank > 0 && obj.rank <= 10) {
+              return true;
+            }
+            return false;
+          })
+          .map((obj) => {
+            return {
+              id: obj.id,
+              name: obj.name,
+              symbol: obj.symbol,
+              rank: obj.rank,
+              price: obj.quotes.USD.price
+            };
+          });
+        setCoins(tickerTop10);
+      });
+  }, []);
+
+  const options = [
+    { id: 'usdollar', name: 'US Dollar', symbol: 'USD' },
+    { id: 'euro', name: 'Euro', symbol: 'EUR', isDisabled: true },
+    { id: 'pound', name: 'Great Britain Pound', symbol: 'GBP' },
+    { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC' }
+  ];
+
   return (
     <div className="App">
       <header className="App-header">
@@ -17,15 +52,12 @@ function App() {
           <div className="cols controls">
             {/* Currency 1 select */}
             <div className="col">
-              <div className="control">
-                <label htmlFor="curr1">Currency 1</label>
-                <select className="select-css">
-                  <option>Select...</option>
-                  <option>USD</option>
-                  <option>EUR</option>
-                  <option>GBP</option>
-                </select>
-              </div>
+              <Dropdown
+                id="curr1"
+                label="Currency 1"
+                options={options}
+                defaultState="USD"
+              />
             </div>
 
             {/* Swap button */}
@@ -35,15 +67,12 @@ function App() {
 
             {/* Currency 2 select */}
             <div className="col">
-              <div className="control">
-                <label htmlFor="curr2">Currency 2</label>
-                <select className="select-css">
-                  <option>Select...</option>
-                  <option>USD</option>
-                  <option>EUR</option>
-                  <option>GBP</option>
-                </select>
-              </div>
+              <Dropdown
+                id="curr2"
+                label="Currency 2"
+                options={options}
+                defaultState="EUR"
+              />
             </div>
           </div>
 

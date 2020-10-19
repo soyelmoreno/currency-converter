@@ -44,20 +44,18 @@
 }
 
 .col {
-  /* border: 1px solid white; */
+  padding-top: 0.5rem;
 }
+
 .control {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
+
 .display {
   /* border: 3px solid orange; */
   margin: 1rem;
-}
-
-.col {
-  padding-top: 0.5rem;
 }
 
 .control {
