@@ -56,24 +56,27 @@ function App() {
       const curr2 = coins.find((coin) => coin.symbol === currency2);
       const exchange1 = curr2.price / curr1.price;
       const exchange2 = curr1.price / curr2.price;
-      setRate1(roundIt(exchange1));
-      setRate2(roundIt(exchange2));
+      setRate1(exchange1);
+      setRate2(exchange2);
       if (changedField === 'amount1') {
-        const raw1 = amount1 * rate1;
-        setAmount2(roundIt(raw1));
+        setAmount2(amount1 * rate1);
       } else {
-        const raw2 = amount2 * rate2;
-        setAmount1(roundIt(raw2));
+        setAmount1(amount2 * rate2);
       }
     }
   }
 
   /**
-   * Round a value for displaying. If less than 2, use 4 decimal places, else,
-   * just two decimal places.
+   * Round a value for displaying. Start with 3 places. If less than 100, do 5
+   * places, and if really small do more places.
    */
   function roundIt(value) {
-    const places = value < 10 ? 10000 : 1000;
+    let places = 100;
+    if (value < 100) {
+      places = 10000;
+    } else if (value < 0.001) {
+      places = 1000000;
+    }
     return Math.round((value + Number.EPSILON) * places) / places;
   }
 
@@ -94,9 +97,9 @@ function App() {
    */
   function handleAmountChange(e) {
     if (e.target.id === 'amount1') {
-      setAmount1(e.target.value);
+      setAmount1(Number(e.target.value));
     } else {
-      setAmount2(e.target.value);
+      setAmount2(Number(e.target.value));
     }
     setChangedField(e.target.id);
   }
@@ -108,6 +111,10 @@ function App() {
     const one = currency1;
     setCurrency1(currency2);
     setCurrency2(one);
+    // Also swap values of Amount fields
+    const fieldone = amount1;
+    setAmount1(amount2);
+    setAmount2(fieldone);
   };
 
   return (
@@ -158,11 +165,11 @@ function App() {
             <Equation
               amt1={1}
               curr1={currency1}
-              amt2={rate1}
+              amt2={roundIt(rate1)}
               curr2={currency2}
             />
             <Equation
-              amt1={rate2}
+              amt1={roundIt(rate2)}
               curr1={currency1}
               amt2={1}
               curr2={currency2}
@@ -212,9 +219,9 @@ function App() {
             {/* Display calculated equation */}
             <div className="display">
               <Equation
-                amt1={amount1 ? amount1 : ''}
+                amt1={amount1 ? roundIt(amount1) : ''}
                 curr1={currency1}
-                amt2={amount2 ? amount2 : ''}
+                amt2={amount2 ? roundIt(amount2) : ''}
                 curr2={currency2}
                 isCalc={true}
               />
