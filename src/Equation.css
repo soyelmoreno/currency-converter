@@ -1,0 +1,7 @@
+.equation {
+  margin: 0;
+}
+
+.equation.calculated {
+  font-size: 2rem;
+}

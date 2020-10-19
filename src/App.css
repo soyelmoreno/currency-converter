@@ -55,13 +55,6 @@
   /* border: 3px solid orange; */
   margin: 1rem;
 }
-.equation {
-  margin: 0;
-  /* border: 3px solid purple; */
-}
-.equation.calculated {
-  font-size: 2rem;
-}
 
 .col {
   padding-top: 0.5rem;

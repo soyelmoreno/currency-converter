@@ -1,4 +1,5 @@
 import React from 'react';
+import Equation from './Equation';
 import './App.css';
 import './select-css.css';
 
@@ -48,8 +49,8 @@ function App() {
 
           {/* Display equations */}
           <div className="display">
-            <p className="equation">1 USD = 1.25 EUR</p>
-            <p className="equation">1 EUR = 0.75 USD</p>
+            <Equation amt1={1} curr1={`USD`} amt2={1.25} curr2={`EUR`} />
+            <Equation amt1={0.75} curr1={`USD`} amt2={1} curr2={`EUR`} />
           </div>
         </section>
 
@@ -90,9 +91,15 @@ function App() {
                 </div>
               </div>
             </div>
-            {/* Display equations */}
+            {/* Display calculated equation */}
             <div className="display">
-              <p className="equation calculated">5 USD = 11.25 EUR</p>
+              <Equation
+                amt1={5}
+                curr1={`USD`}
+                amt2={11.25}
+                curr2={`EUR`}
+                isCalc={true}
+              />
             </div>
           </div>
         </section>
