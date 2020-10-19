@@ -1,26 +1,99 @@
 .App {
   text-align: center;
-  border: 5px solid red;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Delete? */
 .App-logo {
   height: 40vmin;
   border: 5px solid green;
 }
 
 .App-header {
-  background-color: #282c34;
-  /* min-height: 100vh; */
+  min-height: 5vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+}
 
-  border: 5px solid #f80;
+.App-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg2);
+  border: 3px solid var(--accent);
+  border-radius: 1rem;
+  max-width: 40rem; /* 640px */
+  width: calc(100vw - 4rem);
+  padding: 1rem;
+}
+
+.App-section {
+  width: 100%;
+  color: var(--light);
+  /* background-color: green; */
 }
 
 .App-link {
   color: #09d3ac;
+}
+
+.col {
+  /* border: 1px solid white; */
+}
+.control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.display {
+  /* border: 3px solid orange; */
+  margin: 1rem;
+}
+.equation {
+  margin: 0;
+  /* border: 3px solid purple; */
+}
+.equation.calculated {
+  font-size: 2rem;
+}
+
+.col {
+  padding-top: 0.5rem;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* border: 1px solid white; */
+  max-width: 28rem; /* 448px */
+  margin: 0 auto;
+}
+.control > label {
+  padding-bottom: 4px;
+}
+
+.btn-swap {
+  height: 2rem;
+  margin-top: 1rem;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-amt {
+  height: 2.125rem; /* 26px */
+  font-size: 1.125rem; /* 18px */
+  padding: 0.25rem 0.5rem; /* 4px 8px*/
+  margin-right: 0.5rem; /* 8px */
+  width: 100%;
 }
