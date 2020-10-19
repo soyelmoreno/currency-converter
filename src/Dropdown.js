@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './select-css.css';
 
 /**
@@ -6,17 +6,15 @@ import './select-css.css';
  * @param {*} props
  */
 function Dropdown(props) {
-  const [state, setState] = useState(props.defaultState);
-
   return (
     <div className="control">
       <label htmlFor={props.id}>{props.label}</label>
       <select
         id={props.id}
         className="select-css"
-        value={state}
-        onChange={(e) => setState(e.target.value)}
-        onBlur={(e) => setState(e.target.value)}>
+        value={props.value}
+        onChange={(e) => props.onChange(e, props.id)}
+        onBlur={(e) => props.onChange(e, props.id)}>
         {props.options.map((item) => (
           <option
             key={item.symbol}

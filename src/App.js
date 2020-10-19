@@ -4,7 +4,9 @@ import './App.css';
 import Dropdown from './Dropdown';
 
 function App() {
-  const [coins, setCoins] = useState({});
+  const [coins, setCoins] = useState([]);
+  const [currency1, setCurrency1] = useState('BTC');
+  const [currency2, setCurrency2] = useState('ETH');
 
   // Call one time after component is mounted
   useEffect(() => {
@@ -32,12 +34,15 @@ function App() {
       });
   }, []);
 
-  const options = [
-    { id: 'usdollar', name: 'US Dollar', symbol: 'USD' },
-    { id: 'euro', name: 'Euro', symbol: 'EUR', isDisabled: true },
-    { id: 'pound', name: 'Great Britain Pound', symbol: 'GBP' },
-    { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC' }
-  ];
+  // Handler for dropdown changes. Update the currency symbol for the changed
+  // dropdown.
+  const handleDropdown = (e, id) => {
+    if (id === 'curr1') {
+      setCurrency1(e.target.value);
+    } else {
+      setCurrency2(e.target.value);
+    }
+  };
 
   return (
     <div className="App">
@@ -55,8 +60,9 @@ function App() {
               <Dropdown
                 id="curr1"
                 label="Currency 1"
-                options={options}
-                defaultState="USD"
+                options={coins}
+                value={currency1}
+                onChange={handleDropdown}
               />
             </div>
 
@@ -70,8 +76,9 @@ function App() {
               <Dropdown
                 id="curr2"
                 label="Currency 2"
-                options={options}
-                defaultState="EUR"
+                options={coins}
+                value={currency2}
+                onChange={handleDropdown}
               />
             </div>
           </div>
